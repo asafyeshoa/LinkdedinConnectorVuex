@@ -5,8 +5,18 @@ export default function attachContentHooks (bridge) {
   // Hook into the bridge to listen for events sent from the client BEX.
   bridge.on('highlight.content.event', event => {
     anonymousCards()
-    bridge.send(event.responseKey)
+    bridge.send(event.eventResponseKey)
   })
+
+
+  // bridge.on('connect', event => {
+  //
+  //   const result = [{ asaf: 'test'}]
+  //   debugger
+  //
+  //   bridge.send(event.eventResponseKey, result)
+  // })
+
 }
 
 

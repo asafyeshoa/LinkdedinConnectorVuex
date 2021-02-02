@@ -69,6 +69,9 @@
 
     </q-form>
 
+    <q-btn label="test" @click="test"  color="primary" flat class="q-ml-sm"/>
+
+
   </div>
 </template>
 <script>
@@ -93,6 +96,7 @@ export default {
   methods: {
     onSubmit() {
       if (this.accept !== true) {
+
         this.$q.notify({
           color: 'red-5',
           textColor: 'white',
@@ -104,7 +108,7 @@ export default {
           color: 'green-4',
           textColor: 'white',
           icon: 'cloud_done',
-          message: 'Submitted'
+          message: 'Connecting in process'
         })
       }
     },
@@ -119,6 +123,19 @@ export default {
         this.checker = null
       }
 
+    },
+    test(){
+      let params = {
+        active: true,
+        currentWindow: true,
+        data: 'test'
+      };
+      debugger
+      this.$q.bex.send('connect', params).then( success => {
+        debugger
+        alert('connect is back')
+        console.log(success)
+      })
     },
     remove(index, listStr) {
       if(listStr === 'detected'){
@@ -142,12 +159,13 @@ export default {
 
 <style scoped>
 #inputSelect {
-  max-width: 400px;
+  max-width: 500px;
   display: grid;
-  grid-template-columns: 100%;
+  grid-template-columns: auto;
   margin: 0;
   padding: 0;
   color: black;
+  max-height: 500px;
 
 }
 .form {

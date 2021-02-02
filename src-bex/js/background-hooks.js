@@ -3,40 +3,41 @@
 
 // More info: https://quasar.dev/quasar-cli/developing-browser-extensions/background-hooks
 
+import axios from "axios";
 export default function attachBackgroundHooks (bridge /* , allActiveConnections */) {
 
 
 
-  bridge.on('howMany', event => {
-    let payload = event.data
-    payload = 'blabla'
-    console.log('backguond is hit')
-    bridge.send('highlight.content.event', { someData: 'someValue '}).then(r => {
-      console.log('Text has been highlighted')
-    })
+  // bridge.on('howMany', event => {
+  //   let payload = event.data
+  //   payload = 'blabla'
+  //   console.log('backguond is hit')
+  //   bridge.send('highlight.content.event', { someData: 'someValue '}).then(r => {
+  //     console.log('Text has been highlighted')
+  //   })
+  //
+  //   bridge.send(event.eventResponseKey, payload)
+  // })
 
-    bridge.send(event.eventResponseKey, payload)
-  })
+
+  bridge.on('connect', event => {
+    debugger
+    const userNeeds = event.data
+     const response = axios ({
+      url: 'https://linkedin-connector-server.herokuapp.com/',
+       method: 'post',
+        data: userNeeds
+
+    } )
+
+debugger
+      bridge.send(event.eventResponseKey, userNeeds)
 
 
-  bridge.on('storage.get', event => {
-    const payload = event.data
-    if (payload.key === null) {
-      chrome.storage.local.get(null, r => {
-        const result = []
-
-        // Group the items up into an array to take advantage of the bridge's chunk splitting.
-        for (const itemKey in r) {
-          result.push(r[itemKey])
-        }
-        bridge.send(event.eventResponseKey, result)
       })
-    } else {
-      chrome.storage.local.get([payload.key], r => {
-        bridge.send(event.eventResponseKey, r[payload.key])
-      })
-    }
-  })
+
+
+
 
   bridge.on('storage.set', event => {
     const payload = event.data
