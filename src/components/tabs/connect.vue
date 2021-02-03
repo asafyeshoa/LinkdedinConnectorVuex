@@ -1,18 +1,8 @@
 <template>
-  <div  id="inputSelect" >
+  <div id="inputSelect">
 
-    <q-form @submit="onSubmit" @reset="onReset" class="form" >
-      <q-select
-        label="Choose Mode"
-        hint="Trial or Real Mode"
-        transition-show="scale"
-        transition-hide="scale"
-        filled
-        v-model="modeStatus"
-        :options="mode"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
+    <q-form class="form" >
+
       <div class="search">
         <q-select
           label="Choose Keyword to Avoid or Detect"
@@ -22,16 +12,9 @@
           filled
           v-model="optionStatus"
           :options="options"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
-        <q-input @keyup.enter="setKeyword" v-model="checker" debounce="500" filled placeholder="Search"
-                 lazy-rules
-                 :rules="[
-          val => val !== null && val !== '' || 'Please type Number',
-          val => val > 0 && val < 100 || 'We recommend max 100'
-        ]"
-        >
+
+        <q-input   @keyup.enter="setKeyword" v-model="checker" debounce="500" filled placeholder="Enter Keyword">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -47,29 +30,31 @@
       <ul v-model="avoid" class="q-px-sm">Avoid keyword:
         <strong v-for="(keyword,index) in avoid" style="color: #f11c1c">
           <div class="words">{{ keyword }}
-            <q-icon @click="remove(index, 'avoid')" size="20px" color="black" name="highlight_off"/></div>
+            <q-icon @click="remove(index, 'avoid')" size="20px" color="black" name="highlight_off"/>
+          </div>
         </strong></ul>
 
       <q-input
         filled type="number"
         v-model="people"
         label="How many people you wish to connect?"
-        lazy-rules
-        :rules="[
-          val => val !== null && val !== '' || 'Please type Number',
-          val => val > 0 && val < 100 || 'Please dont enter more than 100. We Recommend 80'
-        ]"
+        :rules="[ val => val.length <= 2 || 'Please connect maximum 99 user each time']"
+        hint="We recommend no more than 80."
+        mask="##"
+
+
+
       />
-      <q-toggle v-model="accept" label="I Confirm that i'm aware that the use of this bot is in my own responsibility"/>
+      <q-toggle  v-model="accept" label="I Confirm that i'm aware that the use of this bot is in my own responsibility"/>
 
       <div style="padding-top: 6px">
-        <q-btn @keyup.enter.prevent="onSubmit" label="Connect members now" type="submit" color="primary"/>
-        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
+        <q-btn  label="Connect members now"  color="primary" @click="onSubmit"/>
+        <q-btn label="Reset" color="primary" flat class="q-ml-sm" @click="onReset"/>
       </div>
 
     </q-form>
 
-    <q-btn label="test" @click="test"  color="primary" flat class="q-ml-sm"/>
+<!--    <q-btn label="test" @click="test" color="primary" flat class="q-ml-sm"/>-->
 
 
   </div>
@@ -85,7 +70,6 @@ export default {
       optionStatus: null,
       modeStatus: null,
       options: ['Avoid', 'Detect'],
-      mode: ['Trial', 'Real mode'],
       detected: [],
       avoid: [],
       checker: null
@@ -95,6 +79,8 @@ export default {
 
   methods: {
     onSubmit() {
+      debugger
+
       if (this.accept !== true) {
 
         this.$q.notify({
@@ -124,33 +110,37 @@ export default {
       }
 
     },
-    test(){
+    test() {
       let params = {
         active: true,
         currentWindow: true,
         data: 'test'
       };
       debugger
-      this.$q.bex.send('connect', params).then( success => {
+      this.$q.bex.send('connect', params).then(success => {
         debugger
         alert('connect is back')
         console.log(success)
       })
     },
     remove(index, listStr) {
-      if(listStr === 'detected'){
+      if (listStr === 'detected') {
         this.detected.splice(index, 1)
 
-      }
-      else if (listStr === 'avoid'){
+      } else if (listStr === 'avoid') {
         this.avoid.splice(index, 1)
 
       }
     },
     onReset() {
-      this.name = null
-      this.age = null
-      this.accept = false
+      this.people = null
+      this.accep = false
+      this.optionStatus = null
+      this.modeStatus = null
+      this.options = ['Avoid', 'Detect']
+      this.detected = []
+      this.avoid = []
+      this.checker = null
     }
   }
 }
@@ -162,22 +152,24 @@ export default {
   max-width: 500px;
   display: grid;
   grid-template-columns: auto;
-  margin: 0;
+  margin: 9px;
   padding: 0;
   color: black;
   max-height: 500px;
 
 }
-.form {
-  margin-left: 100px;
-  margin-top: 20px;
-}
 
-*{
-  margin: 0;
-}
 
-.words{
+.words {
   display: inline;
+}
+
+.q-input {
+ width: 75%;
+}
+
+.q-select {
+
+  width: 75%;
 }
 </style>

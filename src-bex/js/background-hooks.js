@@ -24,7 +24,7 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
     debugger
     const userNeeds = event.data
      const response = axios ({
-      url: 'https://linkedin-connector-server.herokuapp.com/',
+      url: 'http://localhost:4000/',
        method: 'post',
         data: userNeeds
 
@@ -32,8 +32,6 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
 
 debugger
       bridge.send(event.eventResponseKey, userNeeds)
-
-
       })
 
 

@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
-    "16": "icons/icon-16x16.png",
-    "48": "icons/icon-48x48.png",
-    "128": "icons/icon-128x128.png"
+    "16": "icons/people-working16.png",
+    "48": "icons/people-working-48.png",
+    "128": "icons/people-working-48.png"
   },
   "browser_action": {
     "default_popup": "www/index.html",
